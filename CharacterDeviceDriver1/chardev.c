@@ -23,13 +23,13 @@ static int chardev_open(struct inode *inode, struct file *filp)
     printk("chardev_open\n");
 
     if (p == NULL) {
-        printk(KERN_ERR "Error kamlloc");
+        printk(KERN_ERR "Failed to kamlloc");
         return -ENOMEM;
     }
 
     ret_cp_length = strlcpy(p->buffer, str, sizeof(p->buffer));
     if (ret_cp_length > strlen(str)) {
-        printk(KERN_ERR "Error strlcpy\n");
+        printk(KERN_ERR "Failed to strlcpy\n");
     }
 
     filp->private_data = p;
@@ -104,7 +104,7 @@ static int chardev_init(void)
 
 static void chardev_exit(void)
 {
-    printk("chardev_close\n");
+    printk("chardev_exit\n");
     unregister_chrdev(DRIVER_MAJOR, DRIVER_NAME);
 }
 
