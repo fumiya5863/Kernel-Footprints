@@ -1,7 +1,7 @@
 # Kernel-Footprints
 
 ## Overview
-いろいろなカーネルモジュールを作成していく
+いろいろなカーネルモジュール
 
 ## Requirement
 - Ubuntu20.04.2
