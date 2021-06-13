@@ -3,6 +3,10 @@
 ## Overview
 いろいろなカーネルモジュールを作成していく
 
+## Requirement
+- Ubuntu20.04.2
+- kernel5.8.0-53
+
 ## How to install
 
 HTTP
