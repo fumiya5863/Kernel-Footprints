@@ -3,9 +3,11 @@
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/fs.h>
+#include <linux/slab.h>
 
 #define DRIVER_NAME "chardev"
 #define DRIVER_MAJOR 60
+#define BUFFER_SIZE 256
 
 struct data {
     unsigned char buffer[BUFFER_SIZE];
@@ -15,18 +17,18 @@ static int chardev_open(struct inode *inode, struct file *file)
 {
     char *str = "HelloWorld";
     int ret_cp_length;
+    struct data *p = kmalloc(sizeof(struct data), GFP_KERNEL);
 
     printk("chardev_open\n");
 
-    struct data *p = kmalloc(sizeof(struct data), GFP_KERNEL);
     if (p == NULL) {
-        printk(KERN_ERR "kmalloc - Null");
+        printk(KERN_ERR "Error kamlloc");
         return -ENOMEM;
     }
 
     ret_cp_length = strlcpy(p->buffer, str, sizeof(p->buffer));
     if (ret_cp_length > strlen(str)) {
-        printk(KERN_ERR "strlcpy - too long (%d)\n", ret);
+        printk(KERN_ERR "Error strlcpy\n");
     }
 
     file->private_data = p;
@@ -34,7 +36,7 @@ static int chardev_open(struct inode *inode, struct file *file)
     return 0;
 }
 
-static int chardev_close(struct inode *inode, struct file *file)
+static int chardev_release(struct inode *inode, struct file *file)
 {
     printk("chardev_release\n");
 
@@ -48,9 +50,9 @@ static int chardev_close(struct inode *inode, struct file *file)
 
 static ssize_t chardev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {    
-    printk("chardev_read\n");
-    
     struct data *p = filp->private_data;
+
+    printk("chardev_read\n");
     
     if (count > BUFFER_SIZE) {
         count = BUFFER_SIZE;
@@ -65,13 +67,15 @@ static ssize_t chardev_read(struct file *filp, char __user *buf, size_t count, l
 
 static ssize_t chardev_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
 {
-    printk("chardev_write\n");
-
     struct data *p = filp->private_data;
+
+    printk("chardev_write\n");
 
     if (copy_from_user(p->buffer, buf, count) != 0) {
         return -EFAULT;
     }
+
+    printk("%s", p->buffer);
     
     return count;
 }
@@ -99,7 +103,7 @@ static int chardev_init(void)
 
 static void chardev_exit(void)
 {
-    printk("Bye！\n");
+    printk("chardev_close\n");
     unregister_chrdev(DRIVER_MAJOR, DRIVER_NAME);
 }
 
