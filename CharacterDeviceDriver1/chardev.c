@@ -4,6 +4,7 @@
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/slab.h>
+#include <linux/uaccess.h>
 
 #define DRIVER_NAME "chardev"
 #define DRIVER_MAJOR 60
@@ -13,7 +14,7 @@ struct data {
     unsigned char buffer[BUFFER_SIZE];
 };
 
-static int chardev_open(struct inode *inode, struct file *file)
+static int chardev_open(struct inode *inode, struct file *filp)
 {
     char *str = "HelloWorld";
     int ret_cp_length;
@@ -31,18 +32,18 @@ static int chardev_open(struct inode *inode, struct file *file)
         printk(KERN_ERR "Error strlcpy\n");
     }
 
-    file->private_data = p;
+    filp->private_data = p;
 
     return 0;
 }
 
-static int chardev_release(struct inode *inode, struct file *file)
+static int chardev_release(struct inode *inode, struct file *filp)
 {
     printk("chardev_release\n");
 
-    if (file->private_data) {
-        kfree(file->private_data);
-        file->private_data = NULL;
+    if (filp->private_data) {
+        kfree(filp->private_data);
+        filp->private_data = NULL;
     }
 
     return 0;
