@@ -6,6 +6,7 @@
 ## Requirement
 - Ubuntu20.04.2
 - kernel5.8.0-53
+- GCC
 
 ## How to install
 
