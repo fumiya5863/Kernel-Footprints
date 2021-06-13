@@ -15,16 +15,8 @@ SSH
 git clone git@github.com:fumiya5863/Kernel-Footprints.git
 ```
 
-## Folder structure
-
-```
-- HelloWorld/
-  - Makefile
-  - hello.c
-- Param/
-  - Makefile
-  - param.c
-```
+## step
+[1.HelloWorld](https://github.com/fumiya5863/Kernel-Footprints/tree/main/HelloWorld)
 
 ## Author
 [fumiya5863](https://github.com/fumiya5863)
