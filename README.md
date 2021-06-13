@@ -20,6 +20,19 @@ SSH
 git clone git@github.com:fumiya5863/Kernel-Footprints.git
 ```
 
+## How to use(HelloWorld)
+
+```shell
+sudo apt install linux-headers-$(uname -r)
+cd Kernel-Footprints
+cd HelloWorld
+make
+sudo insmod hello.ko
+dmesg
+sudo rmmod hello
+make clean
+```
+
 ## step
 - [1.HelloWorld](https://github.com/fumiya5863/Kernel-Footprints/tree/main/HelloWorld)
 - [2.Param](https://github.com/fumiya5863/Kernel-Footprints/tree/main/Param)
