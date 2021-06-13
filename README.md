@@ -36,8 +36,8 @@ make clean
 ## step
 - [1.HelloWorld](https://github.com/fumiya5863/Kernel-Footprints/tree/main/HelloWorld)
 - [2.Param](https://github.com/fumiya5863/Kernel-Footprints/tree/main/Param)
-- [3.CharacterDeviceDriver1](https://github.com/fumiya5863/Kernel-Footprints/tree/main/CharacterDeviceDriver1)
-- [4.CharacterDeviceDriver2](https://github.com/fumiya5863/Kernel-Footprints/tree/main/CharacterDeviceDriver2)
+- [3.CharacterDeviceDriver1](https://github.com/fumiya5863/Kernel-Footprints/tree/main/CharacterDeviceDriver1) (作成中)
+- [4.CharacterDeviceDriver2](https://github.com/fumiya5863/Kernel-Footprints/tree/main/CharacterDeviceDriver2) (作成中)
 
 ## Author
 [fumiya5863](https://github.com/fumiya5863)
