@@ -10,12 +10,12 @@
 #include <linux/uaccess.h>
 
 #define DRIVER_NAME "chardev"
-#define DRIVER_MAJOR 60
 #define BUFFER_SIZE 256
 
 static const unsigned int MINOR_BASE = 0;
 static const unsigned int MINOR_NUM = 2;
 static unsigned int chardev_major;
+
 static struct cdev chardev_cdev;
 static struct class *chardev_class = NULL;
 
