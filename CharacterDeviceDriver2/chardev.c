@@ -3,6 +3,9 @@
 #include <linux/types.h>
 #include <linux/kernel.h>
 #include <linux/fs.h>
+#include <linux/cdev.h>
+#include <linux/sched.h>
+#include <linux/device.h>
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 
@@ -96,22 +99,60 @@ struct file_operations char_device_fops = {
 
 static int chardev_init(void)
 {   
-    int is_dev_register = register_chrdev(DRIVER_MAJOR, DRIVER_NAME, &char_device_fops);
+    int is_alloc_region = 0, cdev_add_err = 0;
+    int i;
+    dev_t dev;
 
     printk("chardev_init\n");
 
-    if (is_dev_register < 0) {
-        printk(KERN_ALERT "Failed to register the character device\n");
-        return is_dev_register;
+    is_alloc_region = alloc_chrdev_region(&dev, MINOR_BASE, MINOR_NUM, DRIVER_NAME);
+    if (is_alloc_region != 0) {
+        printk(KERN_ERR "Failed to alloc_chrdev_region\n");
+        return -1;
     }
-    
-    return is_dev_register;
+
+    chardev_major = MAJOR(dev);
+    dev = MKDEV(chardev_major, MINOR_BASE);
+
+    cdev_init(&chardev_cdev, &char_device_fops);
+    chardev_cdev.owner = THIS_MODULE;
+
+    cdev_add_err = cdev_add(&chardev_cdev, dev, MINOR_NUM);
+    if (cdev_add_err != 0) {
+        printk(KERN_ERR "Failed to cdev_add\n");
+        unregister_chrdev_region(dev, MINOR_NUM);
+        return -1;
+    }
+
+    chardev_class = class_create(THIS_MODULE, DRIVER_NAME);
+    if (IS_ERR(chardev_class)) {
+        printk(KERN_ERR "Failed to class_create\n");
+        cdev_del(&chardev_cdev);
+        unregister_chrdev_region(dev, MINOR_NUM);
+        return -1;
+    }
+
+    for (i = MINOR_BASE; i < MINOR_BASE + MINOR_NUM; i++) {
+		device_create(chardev_class, NULL, MKDEV(chardev_major, i), NULL, "chardev%d", i);
+	}
+
+	return 0;
 }
 
 static void chardev_exit(void)
 {
-    printk("chardev_exit\n");
-    unregister_chrdev(DRIVER_MAJOR, DRIVER_NAME);
+	int i;	
+	dev_t dev = MKDEV(chardev_major, MINOR_BASE);
+	
+	printk("chardev_exit\n");
+	
+	for (i = MINOR_BASE; i < MINOR_BASE + MINOR_NUM; i++) {
+		device_destroy(chardev_class, MKDEV(chardev_major, i));
+	}
+
+	class_destroy(chardev_class);
+	cdev_del(&chardev_cdev);
+	unregister_chrdev_region(dev, MINOR_NUM);
 }
 
 module_init(chardev_init);
