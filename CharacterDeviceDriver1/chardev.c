@@ -99,7 +99,7 @@ static int chardev_init(void)
         return is_dev_register;
     }
     
-    return is_dev_register;
+    return 0;
 }
 
 static void chardev_exit(void)
