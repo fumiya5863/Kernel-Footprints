@@ -10,7 +10,6 @@
 #include <linux/uaccess.h>
 
 #define DRIVER_NAME "chardev"
-#define DRIVER_MAJOR 60
 #define BUFFER_SIZE 256
 
 static const unsigned int MINOR_BASE = 0;
@@ -39,6 +38,7 @@ static int chardev_open(struct inode *inode, struct file *filp)
     ret_cp_length = strlcpy(p->buffer, str, sizeof(p->buffer));
     if (ret_cp_length > strlen(str)) {
         printk(KERN_ERR "Failed to strlcpy\n");
+        return ret_cp_length;
     }
 
     filp->private_data = p;

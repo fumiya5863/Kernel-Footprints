@@ -23,13 +23,14 @@ static int chardev_open(struct inode *inode, struct file *filp)
     printk("chardev_open\n");
 
     if (p == NULL) {
-        printk(KERN_ERR "Failed to kamlloc");
+        printk(KERN_ERR "Failed to kamlloc\n");
         return -ENOMEM;
     }
 
     ret_cp_length = strlcpy(p->buffer, str, sizeof(p->buffer));
     if (ret_cp_length > strlen(str)) {
         printk(KERN_ERR "Failed to strlcpy\n");
+        return ret_cp_length;
     }
 
     filp->private_data = p;
