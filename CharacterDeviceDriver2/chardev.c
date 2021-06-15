@@ -26,22 +26,22 @@ static int chardev_open(struct inode *inode, struct file *filp)
 {
     char *str = "HelloWorld";
     int ret_cp_length;
-    struct data *p = kmalloc(sizeof(struct data), GFP_KERNEL);
+    struct data *data_p = kmalloc(sizeof(struct data), GFP_KERNEL);
 
     printk("chardev_open\n");
 
-    if (p == NULL) {
-        printk(KERN_ERR "Failed to kamlloc");
+    if (data_p == NULL) {
+        printk(KERN_ERR "Failed to kmalloc");
         return -ENOMEM;
     }
 
-    ret_cp_length = strlcpy(p->buffer, str, sizeof(p->buffer));
+    ret_cp_length = strlcpy(data_p->buffer, str, sizeof(data_p->buffer));
     if (ret_cp_length > strlen(str)) {
         printk(KERN_ERR "Failed to strlcpy\n");
         return ret_cp_length;
     }
 
-    filp->private_data = p;
+    filp->private_data = data_p;
 
     return 0;
 }
@@ -60,7 +60,7 @@ static int chardev_release(struct inode *inode, struct file *filp)
 
 static ssize_t chardev_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)
 {    
-    struct data *p = filp->private_data;
+    struct data *data_p = filp->private_data;
 
     printk("chardev_read\n");
     
@@ -68,7 +68,7 @@ static ssize_t chardev_read(struct file *filp, char __user *buf, size_t count, l
         count = BUFFER_SIZE;
     }
 
-    if (copy_to_user(buf, p->buffer, count) != 0) {
+    if (copy_to_user(buf, data_p->buffer, count) != 0) {
         return -EFAULT;
     }
     
@@ -77,15 +77,15 @@ static ssize_t chardev_read(struct file *filp, char __user *buf, size_t count, l
 
 static ssize_t chardev_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
 {
-    struct data *p = filp->private_data;
+    struct data *data_p = filp->private_data;
 
     printk("chardev_write\n");
 
-    if (copy_from_user(p->buffer, buf, count) != 0) {
+    if (copy_from_user(data_p->buffer, buf, count) != 0) {
         return -EFAULT;
     }
 
-    printk("%s", p->buffer);
+    printk("%s", data_p->buffer);
     
     return count;
 }
