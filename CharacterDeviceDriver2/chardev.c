@@ -156,3 +156,6 @@ static void chardev_exit(void)
 
 module_init(chardev_init);
 module_exit(chardev_exit);
+
+MODULE_AUTHOR("fumiya");
+MODULE_LICENSE("Dual BSD/GPL");
