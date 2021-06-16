@@ -112,7 +112,6 @@ static int chardev_init(void)
     }
 
     chardev_major = MAJOR(dev);
-    dev = MKDEV(chardev_major, MINOR_BASE);
 
     cdev_init(&chardev_cdev, &char_device_fops);
     chardev_cdev.owner = THIS_MODULE;
@@ -157,6 +156,3 @@ static void chardev_exit(void)
 
 module_init(chardev_init);
 module_exit(chardev_exit);
-
-MODULE_AUTHOR("fumiya");
-MODULE_LICENSE("Dual BSD/GPL");
